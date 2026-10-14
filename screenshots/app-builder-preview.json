@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "नवोदय विजेता",
+      "hasCanvas": false,
+      "bodyTextLen": 47,
+      "bodyTextHash": "ee64ba5f05cac4a9a07f06212c477fd8bb441b8f5f1d0dcf4acfc008404b1d30",
+      "bodyTextPrefix": "नवोदय विजेता 4,062 सवाल और 36 पेपर खुल रहे हैं…",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "नवोदय विजेता",
+      "hasCanvas": false,
+      "bodyTextLen": 1270,
+      "bodyTextHash": "5fd96dd2c0e95c418029445b01f11378ee00c8d2be04b57c073c22d18ef73687",
+      "bodyTextPrefix": "नवोदय विजेता लेवल 1 · 0 XP आरुष0 आयुष0 0 दिन जवाहर नवोदय विद्याल",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
