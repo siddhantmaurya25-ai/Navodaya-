@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "नवोदय विजेता — कक्षा 6 तैयारी",
+  "short_name": "नवोदय विजेता",
+  "description": "नवोदय कक्षा 6 प्रवेश परीक्षा की हिंदी तैयारी ऐप",
+  "lang": "hi-IN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0fdfa",
+  "theme_color": "#0f766e",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
