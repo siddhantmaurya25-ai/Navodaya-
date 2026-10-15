@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
   Calculator,
@@ -9,6 +9,7 @@ import {
   Layers,
   RotateCcw,
   ScrollText,
+  PlayCircle,
   Swords,
   X,
 } from "lucide-react";
@@ -24,6 +25,7 @@ import { PracticeTab } from "@/components/vijeta/practice";
 import { PapersTab } from "@/components/vijeta/papers";
 import { ExamPlayer } from "@/components/vijeta/exam";
 import { scoreExam } from "@/lib/exam-scoring";
+import { VideosTab } from "@/components/vijeta/videos";
 
 const NAV: { id: TabId; label: string; icon: typeof Home }[] = [
   { id: "होम", label: "होम", icon: Home },
@@ -32,6 +34,7 @@ const NAV: { id: TabId; label: string; icon: typeof Home }[] = [
   { id: "शब्दसागर", label: "हिंदी", icon: Languages },
   { id: "अभ्यास", label: "सवाल", icon: Layers },
   { id: "टेस्ट", label: "पेपर", icon: ScrollText },
+  { id: "वीडियो", label: "वीडियो", icon: PlayCircle },
 ];
 
 type Battle = {
@@ -53,6 +56,14 @@ export function VijetaApp() {
   const [syncInput, setSyncInput] = useState("");
   const [syncMsg, setSyncMsg] = useState("");
   const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator && window.location.protocol === "https:") {
+      navigator.serviceWorker.register("/service-worker.js").catch(() => {
+        // The app remains usable if the host disables service workers.
+      });
+    }
+  }, []);
 
   const value = useMemo<VijetaContextValue | null>(() => {
     if (!bank) return null;
@@ -242,11 +253,12 @@ export function VijetaApp() {
             {tab === "शब्दसागर" && <HindiTab />}
             {tab === "अभ्यास" && <PracticeTab />}
             {tab === "टेस्ट" && <PapersTab />}
+            {tab === "वीडियो" && <VideosTab />}
           </main>
         </div>
 
         <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper-2 md:hidden">
-          <div className="grid grid-cols-6 gap-1 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))]">
+          <div className="grid grid-cols-7 gap-1 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))]">
             {NAV.map((item) => {
               const Icon = item.icon;
               const on = tab === item.id;

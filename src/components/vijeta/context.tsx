@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { Bank, Chapter, Profile, Student, StudyTask } from "@/lib/exam-types";
 
-export type TabId = "होम" | "पढ़ाई" | "ग्रंथालय" | "शब्दसागर" | "अभ्यास" | "टेस्ट";
+export type TabId = "होम" | "पढ़ाई" | "ग्रंथालय" | "शब्दसागर" | "अभ्यास" | "टेस्ट" | "वीडियो";
 
 export type VijetaContextValue = {
   bank: Bank;
