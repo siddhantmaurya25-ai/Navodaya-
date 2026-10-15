@@ -1,0 +1,10 @@
+{
+  "name": "Navodaya Vijeta 5.0 - JNVST Class 6",
+  "short_name": "Navodaya Vijeta",
+  "id": "in.navodayavijeta.app",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a"
+}

@@ -1,8 +1,7 @@
 {
   "appId": "in.navodayavijeta.app",
   "appName": "Navodaya Vijeta",
-  "webDir": "www",
-  "bundledWebRuntime": false,
+  "webDir": "public",
   "server": {
     "androidScheme": "https"
   }
