@@ -38,9 +38,13 @@ export function PracticeTab() {
     <div className="space-y-4">
       <header className="flex flex-wrap items-end justify-between gap-2">
         <div>
-          <h1 className="font-display text-3xl">4,062 सवाल</h1>
+          <h1 className="font-display text-3xl">
+            {bank.questionsReady ? `${bank.questions.length.toLocaleString("hi-IN")} सवाल` : "अभ्यास सामग्री"}
+          </h1>
           <p className="text-sm text-ink-soft">
-            {solvedSet.size} हल हो चुके हैं। कार्ड पलटो, खोजो, गलती कॉपी दोहराओ।
+            {bank.questionsReady
+              ? `${solvedSet.size} हल हो चुके हैं। कार्ड पलटो, खोजो, गलती कॉपी दोहराओ।`
+              : "ऑफ़लाइन सवाल तैयार हो रहे हैं। इस बीच पाठ और कक्षा सामग्री पढ़ सकते हैं।"}
           </p>
         </div>
       </header>
@@ -117,6 +121,11 @@ export function PracticeTab() {
               </button>
             </div>
           </>
+        )}
+        {!bank.questionsReady && (
+          <div className="mt-3 rounded-2xl border border-paper-2/15 bg-paper-2/5 p-3 text-sm text-paper-2/80" role="status">
+            सवाल खुलते ही कार्ड अभ्यास उपलब्ध होगा। ऊपर दिखाई देने वाले सामग्री-संदेश से फिर कोशिश की जा सकती है।
+          </div>
         )}
       </section>
 

@@ -1,25 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+@source "./";
+@source "../capacitor";
 
 @theme {
-  --font-sans: "Noto Sans Devanagari", "Segoe UI", sans-serif;
-  --font-display: "Fraunces", "Noto Sans Devanagari", serif;
+  --font-sans: "Noto Sans Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
+  --font-display: "Noto Sans Devanagari", "Nirmala UI", "Mangal", Georgia, serif;
 
-  --color-paper: #f3eee4;
-  --color-paper-2: #fffaf3;
-  --color-ink: #1b2430;
-  --color-ink-soft: #4a5568;
-  --color-line: #e3d7c6;
-  --color-line-strong: #cbbba4;
-  --color-saffron: #c4561a;
-  --color-saffron-deep: #8c3c10;
-  --color-saffron-soft: #f8e7d6;
-  --color-moss: #1f6b4a;
-  --color-moss-soft: #e4f2ea;
-  --color-danger: #8f2d24;
-  --color-danger-soft: #f8e6e2;
+  --color-paper: #f5f3ed;
+  --color-paper-2: #fffefa;
+  --color-ink: #192638;
+  --color-ink-soft: #596574;
+  --color-line: #e6e0d5;
+  --color-line-strong: #cabca7;
+  --color-saffron: #d76322;
+  --color-saffron-deep: #924015;
+  --color-saffron-soft: #faeadc;
+  --color-moss: #21704d;
+  --color-moss-soft: #e5f2e9;
+  --color-danger: #9a342b;
+  --color-danger-soft: #f8e7e3;
 
-  --radius-card: 1.25rem;
+  --radius-card: 1.5rem;
+}
+
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
 }
 
 @layer base {
@@ -29,12 +37,18 @@
     min-height: 100%;
   }
 
+  html {
+    scroll-behavior: smooth;
+    background: var(--color-paper);
+  }
+
   body {
     margin: 0;
-    background: var(--color-paper);
+    background: linear-gradient(180deg, #f8f7f2 0%, var(--color-paper) 100%);
     color: var(--color-ink);
     font-family: var(--font-sans);
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
 
   button:not(:disabled),
@@ -42,9 +56,24 @@
     cursor: pointer;
   }
 
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-saffron) 58%, transparent);
+    outline-offset: 2px;
+  }
+
   ::selection {
-    background: #f8e7d6;
-    color: #1b2430;
+    background: var(--color-saffron-soft);
+    color: var(--color-ink);
   }
 }
 
@@ -54,9 +83,61 @@
     width: 100%;
     height: auto;
   }
+
+  .course-hero {
+    isolation: isolate;
+    background:
+      radial-gradient(ellipse at 85% 10%, rgb(215 99 34 / 24%), transparent 34%),
+      linear-gradient(130deg, #192638 0%, #223a4c 58%, #1c493d 100%);
+  }
+
+  .course-hero::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image: radial-gradient(rgb(255 254 250 / 16%) 0.7px, transparent 0.7px);
+    background-size: 18px 18px;
+    content: "";
+    mask-image: linear-gradient(110deg, transparent 18%, #000 100%);
+    opacity: 0.24;
+  }
+
+  .course-hero-mark {
+    position: absolute;
+    z-index: -1;
+    top: -0.8em;
+    right: -0.08em;
+    color: rgb(255 254 250 / 7%);
+    font-family: var(--font-display);
+    font-size: clamp(14rem, 32vw, 24rem);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .shimmer-line {
+    position: relative;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-saffron-soft) 70%, white);
+  }
+
+  .shimmer-line::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 72%), transparent);
+    content: "";
+    transform: translateX(-100%);
+    animation: shimmer 1.7s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *,
   *::before,
   *::after {

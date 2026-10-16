@@ -26,17 +26,24 @@ import { HomeTab } from "@/components/vijeta/home";
 import { ChapterReader, StudyTab } from "@/components/vijeta/study";
 import { LabTab } from "@/components/vijeta/lab";
 import { HindiTab } from "@/components/vijeta/hindi";
-import { PracticeTab } from "@/components/vijeta/practice";
+import { PracticeHub } from "@/components/vijeta/practice-hub";
 import { PapersTab } from "@/components/vijeta/papers";
 import { ExamPlayer } from "@/components/vijeta/exam";
 import { scoreExam } from "@/lib/exam-scoring";
 
 const NAV: { id: TabId; label: string; icon: typeof Home }[] = [
-  { id: "होम", label: "होम", icon: Home },
-  { id: "पढ़ाई", label: "अध्याय", icon: BookOpen },
-  { id: "ग्रंथालय", label: "लैब", icon: Calculator },
-  { id: "शब्दसागर", label: "हिंदी", icon: Languages },
-  { id: "अभ्यास", label: "सवाल", icon: Layers },
+  { id: "होम", label: "आज", icon: Home },
+  { id: "पढ़ाई", label: "कक्षा 6 कोर्स", icon: BookOpen },
+  { id: "ग्रंथालय", label: "गणित लैब", icon: Calculator },
+  { id: "शब्दसागर", label: "हिंदी कोष", icon: Languages },
+  { id: "अभ्यास", label: "अभ्यास केंद्र", icon: Layers },
+  { id: "टेस्ट", label: "पेपर हॉल", icon: ScrollText },
+];
+
+const MOBILE_NAV: { id: TabId; label: string; icon: typeof Home }[] = [
+  { id: "होम", label: "आज", icon: Home },
+  { id: "पढ़ाई", label: "कोर्स", icon: BookOpen },
+  { id: "अभ्यास", label: "अभ्यास", icon: Layers },
   { id: "टेस्ट", label: "पेपर", icon: ScrollText },
 ];
 
@@ -57,7 +64,7 @@ export function VijetaApp() {
 
 function VijetaAppContent() {
   const auth = useSupabaseAuth();
-  const { bank, error } = useBank();
+  const { bank, error, retry: retryBank } = useBank();
   const progress = useProgress(auth.user?.id ?? null, auth.ready);
   const [tab, setTab] = useState<TabId>("होम");
   const [exam, setExam] = useState<ExamSession | null>(null);
@@ -203,10 +210,16 @@ function VijetaAppContent() {
     };
   }, [bank, progress, tab]);
 
-  if (!auth.ready || !progress.ready || !value) {
+  if (!progress.ready || !value) {
     return (
       <main className="grid min-h-dvh place-items-center bg-paper p-6">
-        <p className="font-display text-3xl text-ink">नवोदय विजेता</p>
+        <section className="w-full max-w-sm rounded-3xl border border-line bg-paper-2 p-6 text-center shadow-sm">
+          <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-ink font-display text-xl font-bold text-saffron-soft">न</span>
+          <h1 className="mt-3 font-display text-2xl text-ink">नवोदय विजेता</h1>
+          <p className="mt-2 text-sm text-ink-soft">आपकी स्थानीय पढ़ाई तैयार हो रही है…</p>
+          <div className="shimmer-line mx-auto mt-4 h-2 w-40 rounded-full" aria-hidden="true" />
+          <p className="mt-3 text-xs text-ink-soft">लॉगिन या इंटरनेट के बिना भी कक्षाएँ खुलेंगी।</p>
+        </section>
       </main>
     );
   }
@@ -261,93 +274,110 @@ function VijetaAppContent() {
               );
             })}
           </nav>
-          <p className="text-xs text-ink-soft">परीक्षा 28 नवम्बर 2026</p>
+          <p className="text-xs text-ink-soft">हिंदी-प्रथम · ऑफ़लाइन तैयारी</p>
         </aside>
 
         <div className="min-w-0">
           <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur">
-            <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 md:px-5">
-              <div className="md:hidden">
-                <div className="font-display text-lg leading-none">नवोदय विजेता</div>
-                <div className="text-[11px] text-ink-soft">लेवल {level} · {progress.profile.xp} XP</div>
+            <div className="mx-auto max-w-6xl px-3 py-2 md:px-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-ink font-display text-base font-bold text-saffron-soft">न</span>
+                  <div className="min-w-0">
+                    <p className="truncate font-display text-base font-bold leading-tight">नवोदय विजेता</p>
+                    <p className="text-[10px] text-ink-soft md:text-xs">कक्षा 6 · आरुष और आयुष</p>
+                  </div>
+                </div>
+                <div className="hidden min-w-0 flex-1 text-center text-xs text-ink-soft md:block">
+                  लेवल {level} · {progress.profile.completed.length}/40 पाठ · {bank.questionsReady ? `${progress.solvedSet.size}/${bank.questions.length.toLocaleString("hi-IN")} सवाल` : "ऑफ़लाइन सवाल तैयार हो रहे हैं"}
+                </div>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setAccountOpen(true)}
+                    className="inline-flex size-10 items-center justify-center rounded-xl bg-paper-2 md:w-auto md:px-3"
+                    aria-label={auth.user ? "ऑनलाइन खाता" : "लॉगिन या खाता बनाएँ"}
+                    title={auth.user?.email ?? "ईमेल से लॉगिन"}
+                  >
+                    <UserRound className="size-4" />
+                    <span className="ml-1 hidden text-xs font-semibold md:inline">{auth.user ? "खाता" : "लॉगिन"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSyncOpen(true);
+                      setSyncMsg("");
+                    }}
+                    className="grid size-10 place-items-center rounded-xl bg-paper-2"
+                    aria-label="क्लाउड सिंक और बैकअप"
+                  >
+                    <Cloud className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm("आरुष और आयुष दोनों की प्रगति मिटाकर शून्य से शुरू करें?")) progress.resetAll();
+                    }}
+                    className="hidden size-10 place-items-center rounded-xl bg-paper-2 md:grid"
+                    aria-label="दोनों भाइयों की प्रगति रीसेट करें"
+                  >
+                    <RotateCcw className="size-4" />
+                  </button>
+                </div>
               </div>
-              <div className="hidden text-sm text-ink-soft md:block">
-                लेवल {level} · {progress.profile.completed.length}/40 अध्याय ·{" "}
-                {bank.questionsReady ? `${progress.solvedSet.size}/4062 सवाल` : "सवाल खुल रहे हैं"}
-                {notice ? ` · ${notice}` : ""}
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex rounded-full bg-paper-2 p-1">
+              <div className="mt-2 flex items-center justify-between gap-2 md:hidden">
+                <div className="flex rounded-2xl bg-paper-2 p-1">
                   {(["आरुष", "आयुष"] as const).map((name) => (
-                    <button
-                      key={name}
-                      type="button"
-                      onClick={() => progress.setStudent(name)}
-                      className={
-                        "min-h-11 rounded-full px-3 text-xs font-bold " +
-                        (progress.student === name ? "bg-ink text-saffron-soft" : "text-ink-soft")
-                      }
-                    >
-                      {name}
-                      <span className="ml-1 opacity-70">{progress.profiles[name].xp}</span>
-                    </button>
+                    <button key={name} type="button" onClick={() => progress.setStudent(name)} aria-pressed={progress.student === name}
+                      className={"min-h-9 rounded-xl px-3 text-xs font-bold " + (progress.student === name ? "bg-ink text-saffron-soft" : "text-ink-soft")}
+                    >{name}</button>
                   ))}
                 </div>
-                <span className="inline-flex min-h-11 items-center gap-1 rounded-full bg-saffron-soft px-3 text-xs font-bold text-saffron-deep">
-                  <Flame className="size-3.5" />
-                  {progress.profile.streak} दिन
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setAccountOpen(true)}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-paper-2 px-3 text-xs font-semibold"
-                  aria-label={auth.user ? "ऑनलाइन खाता" : "लॉगिन या खाता बनाएँ"}
-                  title={auth.user?.email ?? "ईमेल से लॉगिन"}
-                >
-                  <UserRound className="size-4" />
-                  <span className="hidden sm:inline">{auth.user ? "खाता" : "लॉगिन"}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSyncOpen(true);
-                    setSyncMsg("");
-                  }}
-                  className="grid size-11 place-items-center rounded-full bg-paper-2"
-                  aria-label="सिंक"
-                >
-                  <Cloud className="size-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (window.confirm("आरुष और आयुष दोनों की प्रगति मिटाकर शून्य से शुरू करें?")) progress.resetAll();
-                  }}
-                  className="grid size-11 place-items-center rounded-full bg-paper-2"
-                  aria-label="रीसेट"
-                >
-                  <RotateCcw className="size-4" />
-                </button>
+                <div className="flex items-center gap-2 text-[11px] font-semibold text-ink-soft">
+                  <span>लेवल {level}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-saffron-soft px-2 py-1 text-saffron-deep"><Flame className="size-3" />{progress.profile.streak} दिन</span>
+                </div>
+              </div>
+              <div className="mt-2 hidden items-center justify-between gap-3 md:flex">
+                <div className="flex rounded-full bg-paper-2 p-1">
+                  {(["आरुष", "आयुष"] as const).map((name) => (
+                    <button key={name} type="button" onClick={() => progress.setStudent(name)} aria-pressed={progress.student === name}
+                      className={"min-h-9 rounded-full px-3 text-xs font-bold " + (progress.student === name ? "bg-ink text-saffron-soft" : "text-ink-soft")}
+                    >{name}<span className="ml-1 opacity-70">{progress.profiles[name].xp.toLocaleString("hi-IN")} XP</span></button>
+                  ))}
+                </div>
+                <span className="text-xs text-ink-soft">{bank.questionsReady ? "ऑफ़लाइन सामग्री तैयार" : "स्थानीय पाठ उपलब्ध · सवाल खुल रहे हैं"}</span>
+                <span className="inline-flex min-h-9 items-center gap-1 rounded-full bg-saffron-soft px-3 text-xs font-bold text-saffron-deep"><Flame className="size-3.5" />{progress.profile.streak} दिन</span>
               </div>
             </div>
           </header>
 
-          <main className="mx-auto w-full max-w-6xl px-3 pt-4 pb-28 md:px-5 md:pb-10">
-            {error && (
-              <p className="mb-3 rounded-2xl bg-danger-soft px-4 py-3 text-sm font-semibold text-danger">{error}</p>
-            )}
+          <main className="mx-auto w-full max-w-6xl px-3 pt-4 pb-24 md:px-5 md:pb-10">
+            {error ? (
+              <section className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-danger/15 bg-danger-soft p-4" role="alert">
+                <div className="min-w-0"><p className="text-sm font-bold text-danger">सवालों की फ़ाइल नहीं खुली</p><p className="mt-1 text-xs text-danger">पाठ और स्थानीय प्रगति उपलब्ध हैं। सवालों को फिर से लोड किया जा सकता है।</p></div>
+                <button type="button" onClick={retryBank} className="min-h-11 rounded-xl bg-danger px-4 text-xs font-bold text-paper-2">फिर कोशिश करें</button>
+              </section>
+            ) : !bank.questionsReady ? (
+              <div className="mb-4 flex items-center gap-3 rounded-2xl border border-line bg-paper-2 p-3" role="status" aria-live="polite">
+                <span className="size-2 shrink-0 animate-pulse rounded-full bg-saffron" />
+                <div className="min-w-0 flex-1"><p className="text-xs font-bold">ऑफ़लाइन सवाल तैयार हो रहे हैं</p><p className="text-[11px] text-ink-soft">पाठ अभी खुला है — सामग्री का इंतज़ार किए बिना कोर्स देख सकते हैं।</p></div>
+                <div className="shimmer-line hidden h-1.5 w-16 rounded-full sm:block" aria-hidden="true" />
+              </div>
+            ) : null}
+            {notice && <p className="mb-3 rounded-2xl bg-saffron-soft px-4 py-3 text-sm font-semibold text-saffron-deep" role="status">{notice}</p>}
             {tab === "होम" && <HomeTab />}
             {tab === "पढ़ाई" && <StudyTab />}
             {tab === "ग्रंथालय" && <LabTab />}
             {tab === "शब्दसागर" && <HindiTab />}
-            {tab === "अभ्यास" && <PracticeTab />}
+            {tab === "अभ्यास" && <PracticeHub />}
             {tab === "टेस्ट" && <PapersTab />}
           </main>
         </div>
 
         <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper-2 md:hidden">
-          <div className="grid grid-cols-6 gap-1 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))]">
-            {NAV.map((item) => {
+          <div className="mx-auto grid max-w-xl grid-cols-4 gap-1 px-2 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))]">
+            {MOBILE_NAV.map((item) => {
               const Icon = item.icon;
               const on = tab === item.id;
               return (
@@ -355,7 +385,7 @@ function VijetaAppContent() {
                   key={item.id}
                   type="button"
                   onClick={() => setTab(item.id)}
-                  className={"flex min-h-11 flex-col items-center justify-center rounded-2xl text-[10px] font-bold " + (on ? "bg-ink text-saffron-soft" : "text-ink-soft")}
+                  className={"flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl text-[11px] font-bold " + (on ? "bg-ink text-saffron-soft" : "text-ink-soft")}
                 >
                   <Icon className="size-4" />
                   {item.label}
@@ -445,6 +475,18 @@ function VijetaAppContent() {
               className="mt-2 min-h-11 w-full rounded-full bg-saffron text-sm font-bold text-paper-2"
             >
               इम्पोर्ट
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm("आरुष और आयुष दोनों की प्रगति मिटाकर शून्य से शुरू करें?")) {
+                  progress.resetAll();
+                  setSyncOpen(false);
+                }
+              }}
+              className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-danger-soft text-sm font-bold text-danger"
+            >
+              <RotateCcw className="size-4" />दोनों छात्रों की प्रगति रीसेट करें
             </button>
             {syncMsg && <p className="mt-2 text-center text-sm font-semibold">{syncMsg}</p>}
           </div>

@@ -16,19 +16,38 @@ function getAuthRedirectUrl() {
 }
 
 export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
-  const [ready, setReady] = useState(!supabaseConfigured);
+  const [ready, setReady] = useState(true);
   const [user, setUser] = useState<AuthContextValue["user"]>(null);
   const [callbackError, setCallbackError] = useState("");
 
   useEffect(() => {
-    if (!supabase) return;
+    const client = supabase;
+    if (!client) return;
+    let active = true;
+    let authEventSeen = false;
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setReady(true);
+    } = client.auth.onAuthStateChange((_event, session) => {
+      authEventSeen = true;
+      if (active) {
+        setUser(session?.user ?? null);
+        setReady(true);
+      }
     });
-    return () => subscription.unsubscribe();
+    void client.auth
+      .getSession()
+      .then(({ data, error }) => {
+        if (!active) return;
+        if (!authEventSeen && !error) setUser(data.session?.user ?? null);
+        setReady(true);
+      })
+      .catch(() => {
+        if (active) setReady(true);
+      });
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
