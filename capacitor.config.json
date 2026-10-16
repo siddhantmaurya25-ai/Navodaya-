@@ -1,7 +1,7 @@
 {
-  "appId": "in.navodayavijeta.app",
-  "appName": "Navodaya Vijeta",
-  "webDir": "public",
+  "appId": "com.navodaya.vijeta",
+  "appName": "नवोदय विजेता",
+  "webDir": "www",
   "server": {
     "androidScheme": "https"
   }

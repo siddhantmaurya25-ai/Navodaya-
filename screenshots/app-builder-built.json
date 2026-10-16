@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "नवोदय विजेता",
+      "hasCanvas": false,
+      "bodyTextLen": 1285,
+      "bodyTextHash": "33861ea71cd9e585d4eb6293dba2aef1638064980a8de3ce2fc7fc201c3d97af",
+      "bodyTextPrefix": "न विजेता कक्षा 6 · नवोदय होम अध्याय लैब हिंदी सवाल पेपर परीक्षा ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "नवोदय विजेता",
+      "hasCanvas": false,
+      "bodyTextLen": 1223,
+      "bodyTextHash": "114cb702a334acefc3ddad04db1e71f234175bd6dc0deb8bb15c4a6d21bb0ecd",
+      "bodyTextPrefix": "नवोदय विजेता लेवल 1 · 0 XP आरुष0 आयुष0 0 दिन जवाहर नवोदय विद्याल",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

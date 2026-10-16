@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans Devanagari", "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Noto Sans Devanagari", serif;
+
+  --color-paper: #f3eee4;
+  --color-paper-2: #fffaf3;
+  --color-ink: #1b2430;
+  --color-ink-soft: #4a5568;
+  --color-line: #e3d7c6;
+  --color-line-strong: #cbbba4;
+  --color-saffron: #c4561a;
+  --color-saffron-deep: #8c3c10;
+  --color-saffron-soft: #f8e7d6;
+  --color-moss: #1f6b4a;
+  --color-moss-soft: #e4f2ea;
+  --color-danger: #8f2d24;
+  --color-danger-soft: #f8e6e2;
+
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: #f8e7d6;
+    color: #1b2430;
+  }
+}
+
+@layer components {
+  .figure-frame svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
